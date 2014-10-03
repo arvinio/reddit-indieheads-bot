@@ -27,7 +27,22 @@ r = praw.Reddit(user_agent="r/indieheads_Twitter_Bot")
 r.login(INSERT_REDDIT_USERNAME, INSERT_REDDIT_PASSWORD)
 youtube = youtubePlaylist.get_authenticated_service()
 
-# truncated length of tweet title
+
+def main():
+	while True:
+		try:
+			submissions = r.get_subreddit("indieheads").get_new(limit=80)
+			postToReddit(submissions)
+			# returns array of last 80 posts
+		except Exception, e:
+			print "[" + time.strftime("%H:%M:%S") + "] ---Oops! Failed to get posts---"
+			submission = []
+			time.sleep(301)
+		print
+		print "[" + time.strftime("%H:%M:%S") + "] ---Now sleeping for 5 min. Then fetching new posts.---"
+		print
+		time.sleep(301)
+
 def strip_title(title):
 	if len(title) < 100:
 		return title
@@ -59,32 +74,6 @@ def found_in_file(text):
 			return True
 	file.close()
 	return False
-
-"""Code to get Youtube video ID"""
-
-# Gets youtube video ID from string.
-# Example: "[Hey, check out this video.](https://www.youtube.com/watch?v=H_pVkarLMb8)"
-# Would return "H_pVkarLMb8"
-# Will not return if there are more than one link in a string.
-# Courtesy of YT_Bot!
-
-"""
-def getVideoID(string):
-	#videoID = None
-	#yt_count = re.finditer(r'(youtu\.be/)|(youtube\.com/watch)', string)
-	#yt_tuple = tuple(yt_count)
-	#if len(yt_tuple) > 1:
-	#	return None
-	if 'youtube.com/watch' in string:
-		search = re.search(r'(\?|&(amp;)?)v=([\w-]{11})', string)
-        if search:
-        	videoID = search.group(3)
-	if "youtu.be/" in string:
-		search = re.search(r'youtu\.be/([\w-]{11})', string)    
-        if search:
-            videoID = search.group(1)
-	return(videoID)
-"""
 
 """HTTPS POST Request for YouTube OAuth2 refresh token"""
 url = "https://accounts.google.com/o/oauth2/token"
@@ -125,21 +114,6 @@ def getVideoID(value):
 			return query.path.split('/')[2]
 	# fail?
 	return None
-
-def main():
-	while True:
-		try:
-			submissions = r.get_subreddit("indieheads").get_new(limit=80)
-			postToReddit(submissions)
-			# returns array of last 80 posts
-		except Exception, e:
-			print "[" + time.strftime("%H:%M:%S") + "] ---Oops! Failed to get posts---"
-			submission = []
-			time.sleep(301)
-		print
-		print "[" + time.strftime("%H:%M:%S") + "] ---Now sleeping for 5 min. Then fetching new posts.---"
-		print
-		time.sleep(301)
 
 def postToReddit(submissions):
 	for submission in submissions:
