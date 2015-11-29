@@ -75,15 +75,6 @@ def found_in_file(text):
 	file.close()
 	return False
 
-"""HTTPS POST Request for YouTube OAuth2 refresh token"""
-url = "https://accounts.google.com/o/oauth2/token"
-values = {
-	"refresh_token" : "1/lcmr8ayezu4GwZwjH6xkZRuAcI9rfLAJx2g-OCx-XCQ",
-	"client_id" : "211447657248-at4kto7nrn05cu7qblahft8iubjc304i@developer.gserviceaccount.com",
-	"client_secret" : "fER23qprwKMm98NthLaYzMPn",
-	"grant_type" : "refresh_token"
-}
-
 data = urllib.urlencode(values)
 req = urllib2.Request(url,data)
 response = urllib2.urlopen(req)
